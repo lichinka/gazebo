@@ -17,5 +17,6 @@ docker run --rm=true                            \
             -e XAUTHORITY=${XAUTH}              \
             -v ${XSOCK}:${XSOCK}                \
             -v ${XAUTH}:${XAUTH}                \
+            -v /dev/dri:/dev/dri                \
             -P                                  \
             gazebo:7.1
