@@ -10,7 +10,7 @@ RUN apt-get update          && \
 # install Gazebo
 WORKDIR /usr/local/src
 
-ADD gazebo7_install.patch .
+ADD gazebo7_install.patch gazebo7_install.patch
 
 RUN wget http://osrf-distributions.s3.amazonaws.com/gazebo/gazebo7_install.sh && \
     patch < gazebo7_install.patch                                             && \
@@ -23,7 +23,7 @@ RUN useradd -m docker                                               && \
 
 WORKDIR /home/docker
 ENV     HOME /home/docker
-ENV     LC_ALL C.UTF-8
+ENV     LC_ALL C
 
 # SSH configuration
 ADD  ssh/id_rsa.pub .ssh/authorized_keys
