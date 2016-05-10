@@ -1,0 +1,11 @@
+--- gazebo7_install.sh	2016-05-10 08:51:49.599250373 +0000
++++ gazebo7_install.sh.patched 2016-05-10 08:50:15.882515116 +0000
+@@ -47,7 +47,7 @@
+ 
+ # Install gazebo
+ echo "Installing Gazebo"
+-sudo apt-get install gazebo7 libgazebo7-dev
++sudo apt-get -y install gazebo7 libgazebo7-dev
+ 
+ echo "Complete."
+ echo "Type gazebo to start the simulator."
