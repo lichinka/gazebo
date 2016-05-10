@@ -12,8 +12,8 @@ XAUTH=/tmp/.docker.$$.xauth
 xauth nlist ${XDISP} | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge - > /dev/null 2>&1
 
 echo "Starting GAZEBO ..."
-echo "Use 'connect.sh' to launch the GUI."
-echo "Use 'docker stop gazebo' to shutdown the container."
+echo "- use 'connect.sh' to launch the GUI."
+echo "- use 'docker stop gazebo' to shutdown the container."
 
 docker run --rm=true                            \
             -it                                 \
@@ -21,7 +21,7 @@ docker run --rm=true                            \
             -e XAUTHORITY=${XAUTH}              \
             -v ${XSOCK}:${XSOCK}                \
             -v ${XAUTH}:${XAUTH}                \
-            -v /dev/drm:/dev/drm:rw             \
+            -v /dev/drm:/dev/drm                \
             -P                                  \
             --name=gazebo                       \
             gazebo:7.1
