@@ -21,7 +21,6 @@ docker run --rm=true                            \
             -e XAUTHORITY=${XAUTH}              \
             -v ${XSOCK}:${XSOCK}                \
             -v ${XAUTH}:${XAUTH}                \
-            -v /dev/drm:/dev/drm                \
             -P                                  \
             --name=gazebo                       \
             gazebo:7.1
