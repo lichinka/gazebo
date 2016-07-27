@@ -11,6 +11,7 @@ mkdir -p $PREFIX/lib
 
 NUM_OF_PROCESSORS=$(grep -c ^processor /proc/cpuinfo)
 
+export PATH=$PREFIX/bin:$PATH
 export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:$PKG_CONFIG_PATH
 export LIBRARY_PATH=$PREFIX/lib:$PREFIX/lib64
 export LD_LIBRARY_PATH=$LIBRARY_PATH
@@ -226,6 +227,22 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #make -j$NUM_OF_PROCESSORS
 #make install
 
+##libffi
+#wget ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
+#tar xvf libffi-3.2.tar.gz
+#cd libffi-3.2
+#./configure --prefix=$PREFIX
+#make -j$NUM_OF_PROCESSORS
+#make install
+
+##glib2
+#wget http://ftp.gnome.org/pub/GNOME/sources/glib/2.49/glib-2.49.4.tar.xz
+#tar xvf glib-2.49.4.tar.xz
+#cd glib-2.49.4
+#./configure --prefix=$PREFIX
+#make -j$NUM_OF_PROCESSORS
+#make install
+
 ##freetype (without harfbuz)
 #cd $TEMP
 #wget http://download.savannah.gnu.org/releases/freetype/freetype-2.6.tar.gz
@@ -234,7 +251,7 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #./configure --prefix=$PREFIX --without-harfbuzz
 #make -j$NUM_OF_PROCESSORS
 #make install
-#
+
 ##harfbuzz
 #cd $TEMP
 #wget https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.0.tar.bz2
@@ -243,8 +260,8 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #./configure --prefix=$PREFIX
 #make -j$NUM_OF_PROCESSORS
 #make install
-#
-##freetype (now with harfbux)
+
+##freetype (now with harfbuzz)
 #cd $TEMP
 #cd freetype-2.6
 #make distclean
@@ -261,30 +278,21 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #make -j$NUM_OF_PROCESSORS
 #make install
 
-##libffi
-#wget ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
-#tar xvf libffi-3.2.tar.gz
-#cd libffi-3.2
+##cairo (rebuild)
+#cd $TEMP
+#cd cairo-1.14.6
 #./configure --prefix=$PREFIX
 #make -j$NUM_OF_PROCESSORS
 #make install
 
-##glibc
-#wget http://ftp.gnome.org/pub/GNOME/sources/glib/2.49/glib-2.49.4.tar.xz
-#tar xvf glib-2.49.4.tar.xz
-#cd glib-2.49.4
+##pango
+#cd $TEMP
+#wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz
+#tar xvf pango-1.40.1.tar.xz
+#cd pango-1.40.1
 #./configure --prefix=$PREFIX
 #make -j$NUM_OF_PROCESSORS
 #make install
-
-#pango
-cd $TEMP
-wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz
-tar xvf pango-1.40.1.tar.xz
-cd pango-1.40.1
-./configure --prefix=$PREFIX
-make -j$NUM_OF_PROCESSORS
-make install
 
 #gtk+-3.0
 cd $TEMP
