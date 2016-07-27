@@ -23,6 +23,21 @@ module load CMake/3.4.1-GCC-4.9.2
 module load Autotools/20150215-GCC-4.9.3-2.25
 module load intel-tbb-oss/intel64/44_20160526oss
 
+#install packages with standard configuration
+function install {
+   url=$1
+   archive=$(basename "$1")
+   folder=$(basename -s .gz "$archive" | xargs basename -s .bz2 | xargs basename -s .xz | xargs basename -s .tar)
+   cd $TEMP
+   [[ -d $folder ]] && rm -rf $folder
+   wget $url
+   tar xvf $archive
+   cd $folder
+   ./configure --prefix=$PREFIX 2>&1 | tee output-configure
+   make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
+   make install 2>&1 | tee output-make-install
+}
+
 #ignition math
 #cd $TEMP
 #wget https://bitbucket.org/ignitionrobotics/ign-math/get/ignition-math2_2.5.0.tar.bz2
@@ -93,155 +108,40 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #make -j$NUM_OF_PROCESSORS
 #make install
 
-##xorg util-macros
-#cd $TEMP
-#wget https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
-#tar xvf util-macros-1.19.0.tar.gz
-#cd util-macros-1.19.0
 #export ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
 
-#xorg xproto
-#cd $TEMP
-#wget https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
-#tar xvf xproto-7.0.29.tar.gz
-#cd xproto-7.0.29
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
 
-#xorg xextproto
-#cd $temp
-#wget https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
-#tar xvf xextproto-7.3.0.tar.gz
-#cd xextproto-7.3.0
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
 
-##xorg inputproto 
-#cd $temp
-#wget https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
-#tar xvf inputproto-2.3.tar.gz
-#cd inputproto-2.3
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
 
-##xorg inputproto 
-#cd $temp
-#wget https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
-#tar xvf kbproto-1.0.7.tar.gz
-#cd kbproto-1.0.7
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
 
-##xorg xtrans
-#cd $TEMP
-#wget https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
-#tar xvf xtrans-1.3.5.tar.gz 
-#cd xtrans-1.3.5
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
 
-##xorg xcb-proto
-#wget https://xcb.freedesktop.org/dist/xcb-proto-1.12.tar.gz
-#tar xvf xcb-proto-1.12.tar.gz
-#cd xcb-proto-1.12
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://xcb.freedesktop.org/dist/xcb-proto-1.12.tar.gz
 
-##xau
-#cd $TEMP
-#wget https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
-#tar xvf libXau-1.0.8.tar.gz
-#cd libXau-1.0.8
-#./configure --prefix=$PREFIX
-#make
-#make install
+#install https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
 
-##libpthread stubs
-#cd $TEMP
-#wget https://xcb.freedesktop.org/dist/libpthread-stubs-0.3.tar.gz
-#tar xvf libpthread-stubs-0.3.tar.gz
-#cd libpthread-stubs-0.3
-#./configure --prefix=$PREFIX
-#make install
+#install https://xcb.freedesktop.org/dist/libpthread-stubs-0.3.tar.gz
 
-##xorg libxcb
-#cd $TEMP
-#wget https://xcb.freedesktop.org/dist/libxcb-1.12.tar.gz
-#tar xvf libxcb-1.12.tar.gz
-#cd libxcb-1.12
-#./configure --prefix=$PREFIX --enable-xinput --enable-xkb --disable-static
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://xcb.freedesktop.org/dist/libxcb-1.12.tar.gz
 
-##xorg libX11
-#cd $TEMP
-#wget https://www.x.org/releases/X11R7.7/src/lib/libX11-1.5.0.tar.gz
-#tar xvf libX11-1.5.0.tar.gz
-#cd libX11-1.5.0
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.x.org/releases/X11R7.7/src/lib/libX11-1.5.0.tar.gz
 
-##xorg libpixman
-#cd $TEMP
-#wget https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
-#tar xvf pixman-0.34.0.tar.gz
-#cd pixman-0.34.0
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
 
-##xorg libxext
-#cd $TEMP
-#wget https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
-#tar xvf libXext-1.2.0.tar.gz
-#cd libXext-1.2.0
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
 
-##libpng
-#cd $TEMP
-#wget https://sourceforge.net/projects/libpng/files/libpng16/1.6.23/libpng-1.6.23.tar.gz
-#tar xvf libpng-1.6.23.tar.gz
-#cd libpng-1.6.23
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://sourceforge.net/projects/libpng/files/libpng16/1.6.23/libpng-1.6.23.tar.gz
 
-##cairo
-#cd $TEMP
-#wget https://www.cairographics.org/releases/cairo-1.14.6.tar.xz
-#tar xvf cairo-1.14.6.tar.xz
-#cd cairo-1.14.6
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.cairographics.org/releases/cairo-1.14.6.tar.xz
 
-##libffi
-#wget ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
-#tar xvf libffi-3.2.tar.gz
-#cd libffi-3.2
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
 
-##glib2
-#wget http://ftp.gnome.org/pub/GNOME/sources/glib/2.49/glib-2.49.4.tar.xz
-#tar xvf glib-2.49.4.tar.xz
-#cd glib-2.49.4
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install http://ftp.gnome.org/pub/GNOME/sources/glib/2.49/glib-2.49.4.tar.xz
 
 ##freetype (without harfbuz)
 #cd $TEMP
@@ -252,22 +152,10 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #make -j$NUM_OF_PROCESSORS
 #make install
 
-##harfbuzz
-#cd $TEMP
-#wget https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.0.tar.bz2
-#tar xvf harfbuzz-1.3.0.tar.bz2
-#cd harfbuzz-1.3.0
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.0.tar.bz2
 
-##freetype (now with harfbuzz)
-#cd $TEMP
-#cd freetype-2.6
-#make distclean
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+##freetype (again, this time with harfbuzz)
+#install http://download.savannah.gnu.org/releases/freetype/freetype-2.6.tar.gz
 
 ##fontconfig
 #cd $TEMP
@@ -278,30 +166,24 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #make -j$NUM_OF_PROCESSORS
 #make install
 
-##cairo (rebuild)
-#cd $TEMP
-#cd cairo-1.14.6
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+##cairo (again, this time with freetype)
+#install https://www.cairographics.org/releases/cairo-1.14.6.tar.xz
 
-##pango
-#cd $TEMP
-#wget http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz
-#tar xvf pango-1.40.1.tar.xz
-#cd pango-1.40.1
-#./configure --prefix=$PREFIX
-#make -j$NUM_OF_PROCESSORS
-#make install
+#install http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz
 
-#gtk+-3.0
-cd $TEMP
-wget http://ftp.gnome.org/pub/gnome/sources/gtk+/3.20/gtk+-3.20.6.tar.xz
-tar xvf gtk+-3.20.6.tar.xz
-cd gtk+-3.20.6
-./configure --prefix=$PREFIX
-make -j$NUM_OF_PROCESSORS
-make install
+#install http://www.nasm.us/pub/nasm/releasebuilds/2.12/nasm-2.12.tar.gz
+
+#install https://sourceforge.net/projects/libjpeg-turbo/files/1.5.0/libjpeg-turbo-1.5.0.tar.gz
+
+#install ftp://ftp.remotesensing.org/pub/libtiff/tiff-4.0.6.tar.gz
+
+#install https://download.gnome.org/sources/gdk-pixbuf/2.35/gdk-pixbuf-2.35.2.tar.xz
+
+#install https://download.gnome.org/sources/atk/2.20/atk-2.20.0.tar.xz
+
+install https://www.x.org/releases/individual/lib/libXi-1.7.tar.gz
+
+install http://ftp.gnome.org/pub/gnome/sources/gtk+/3.20/gtk+-3.20.6.tar.xz
 
 #gtk-3.0
 
