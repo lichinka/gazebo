@@ -2,6 +2,7 @@
 
 SCRIPT_PATH=$(pwd)
 PREFIX=$HOME/local
+SYSCONFDIR=$PREFIX/etc
 mkdir -p $PREFIX
 TEMP=$HOME/tmp
 mkdir -p $TEMP
@@ -33,7 +34,7 @@ function install {
    wget $url
    tar xvf $archive
    cd $folder
-   ./configure --prefix=$PREFIX 2>&1 | tee output-configure
+   ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
    make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
    make install 2>&1 | tee output-make-install
 }
@@ -110,16 +111,24 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 
 #export ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
 #install https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
-
 #install https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
-
 #install https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
-
 #install https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
-
 #install https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
-
 #install https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
+#install https://www.x.org/releases/X11R7.7/src/lib/libX11-1.5.0.tar.gz
+#install https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
+#install https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
+#install https://www.x.org/releases/individual/lib/libXi-1.7.tar.gz
+#install https://www.x.org/archive/individual/lib/libXtst-1.2.2.tar.gz
+#install https://www.x.org/archive/individual/lib/libICE-1.0.9.tar.gz
+#install https://www.x.org/archive/individual/lib/libSM-1.2.2.tar.gz
+#install https://www.x.org/releases/individual/lib/libXt-1.1.5.tar.gz
+#install https://www.x.org/archive/individual/lib/libXmu-1.1.2.tar.gz
+#install https://www.x.org/archive/individual/lib/libXpm-3.5.11.tar.gz
+#install https://www.x.org/releases/individual/lib/libXaw-1.0.13.tar.gz
+#install https://www.x.org/archive/individual/lib/libXrender-0.9.8.tar.gz
+#install https://www.x.org/archive/individual/lib/libXrandr-1.4.2.tar.gz
 
 #install https://xcb.freedesktop.org/dist/xcb-proto-1.12.tar.gz
 
@@ -128,12 +137,6 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 #install https://xcb.freedesktop.org/dist/libpthread-stubs-0.3.tar.gz
 
 #install https://xcb.freedesktop.org/dist/libxcb-1.12.tar.gz
-
-#install https://www.x.org/releases/X11R7.7/src/lib/libX11-1.5.0.tar.gz
-
-#install https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
-
-#install https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
 
 #install https://sourceforge.net/projects/libpng/files/libpng16/1.6.23/libpng-1.6.23.tar.gz
 
@@ -181,47 +184,24 @@ export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 
 #install https://download.gnome.org/sources/atk/2.20/atk-2.20.0.tar.xz
 
-install https://www.x.org/releases/individual/lib/libXi-1.7.tar.gz
+#install http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
 
-install http://ftp.gnome.org/pub/gnome/sources/gtk+/3.20/gtk+-3.20.6.tar.xz
+#install https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
 
-#gtk-3.0
+#install http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
 
+#install http://ftp.gnome.org/pub/gnome/sources/at-spi2-core/2.18/at-spi2-core-2.18.3.tar.xz
+#install http://ftp.gnome.org/pub/gnome/sources/at-spi2-atk/2.18/at-spi2-atk-2.18.1.tar.xz
 
-#sm
-wget http://www.joachim-breitner.de/archive/screen-message/screen-message-0.24.tar.gz
-tar xvf screen-message-0.24.tar.gz
-cd screen-message-0.24
-./configure --prefix=$PREFIX
-make
-make install
+#install http://ftp.gnome.org/pub/gnome/sources/gtk+/3.20/gtk+-3.20.6.tar.xz
 
-#ice
-
-#xorg xt
-cd $TEMP
-wget https://www.x.org/releases/individual/lib/libXt-1.1.5.tar.gz
-tar xvf libXt-1.1.5.tar.gz
-cd libXt-1.1.5
-./configure --prefix=$PREFIX
-make -j$NUM_OF_PROCESSORS
-make install 
-
-#xorg xaw
-cd $TEMP
-wget https://www.x.org/releases/individual/lib/libXaw-1.0.13.tar.gz
-tar xvf libXaw-1.0.13.tar.gz
-cd libXaw-1.0.13
-./configure --prefix=$PREFIX
-make -j$NUM_OF_PROCESSORS
-make install
+#TODO: this is useless! get rid of it and all the dependencies
+#install http://www.joachim-breitner.de/archive/screen-message/screen-message-0.24.tar.gz
 
 #ogre
 cd $TEMP
-#wget https://bitbucket.org/sinbad/ogre/get/v1-9-0.tar.bz2 -o ogre-v1-9-0.tar.bz2
-##https://bitbucket.org/sinbad/ogre/commits/a24ac4afbbb9dc5ff49a61634af50da11ba8fb97/raw/
-##https://bitbucket.org/sinbad/ogre/commits/d84bce645d3dd439188d3d29d8da51c51765a085/raw/
-#tar xvf ogre-v1-9-0.tar.bz2 
+wget https://bitbucket.org/sinbad/ogre/get/v1-9-0.tar.bz2 -o ogre-v1-9-0.tar.bz2
+tar xvf ogre-v1-9-0.tar.bz2 
 cd sinbad-ogre-dd30349ea667
 [[ -d build ]] && rm -rf build
 mkdir build && cd build
@@ -232,6 +212,7 @@ cmake .. \
     -DOGRE_INSTALL_SAMPLES_SOURCE=FALSE \
     -DCMAKE_BUILD_TYPE=Release
 make
+make install
 #make OgreDoc
 
 #gazebo
