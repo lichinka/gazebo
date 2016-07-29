@@ -55,8 +55,8 @@ cd $TEMP
 wget https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz/download -O tinyxml_2_6_2.tar.gz
 tar xvf tinyxml_2_6_2.tar.gz
 cd tinyxml
-patch < $SCRIPT_PATH/Makefile.patch
-patch < $SCRIPT_PATH/tinyxml.h.patch
+patch < $SCRIPT_PATH/patches/tinyxml/Makefile.patch
+patch < $SCRIPT_PATH/patches/tinyxml/tinyxml.h.patch
 make -j$NUM_OF_PROCESSORS
 cp tinyxml.h $PREFIX/include
 ar crf libtinyxml.a $(ls *.o | grep -v xmltest)
@@ -100,9 +100,6 @@ unzip FreeImage3170.zip
 cd FreeImage
 cp Dist/lib* $PREFIX/lib 
 cp Dist/FreeImage.h $PREFIX/include
-
-#openGL
-#OPENGL_INCLUDE_DIR=/cm/shared/apps/cuda-8.0/extras/CUPTI/include
 
 #libcurl
 export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -277,10 +274,10 @@ cd $TEMP
 wget https://bitbucket.org/osrf/gazebo/get/gazebo7_7.3.1.tar.bz2
 tar xvf gazebo7_7.3.1.tar.bz2
 cd osrf-gazebo-9bc8cb494795
+patch < $SCRIPT_PATH/patches/gazebo/CMakeLists.txt.patch
 [[ -d build ]] && rm -rf build
 mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DENABLE_TESTS_COMPILATION:BOOL=False .. 2>&1 | tee output-cmake
-#cmake -DOPENGL_INCLUDE_DIR=$OPENGL_INCLUDE_DIR -DCMAKE_INSTALL_PREFIX=$PREFIX ..
 make -j$NUM_OF_PROCESSORS 
 make install
 

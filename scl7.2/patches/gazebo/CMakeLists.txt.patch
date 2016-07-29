@@ -1,0 +1,14 @@
+--- CMakeLists.txt	2016-07-14 02:23:35.000000000 +0200
++++ CMakeLists.txt-new	2016-07-29 13:40:42.297609000 +0200
+@@ -24,6 +24,11 @@
+ set (gazebo_cmake_dir ${PROJECT_SOURCE_DIR}/cmake CACHE PATH "Location of CMake scripts")
+ 
+ ########################################
++# this is a patch to make inttypes.h define the PRId64 macro
++add_definitions(-D__STDC_FORMAT_MACROS)
++########################################
++
++########################################
+ # Package Creation:
+ include (${gazebo_cmake_dir}/gazebo_cpack.cmake)
+ set (CPACK_PACKAGE_VERSION "${GAZEBO_VERSION_FULL}")
