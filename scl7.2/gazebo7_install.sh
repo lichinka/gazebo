@@ -14,17 +14,17 @@ NUM_OF_PROCESSORS=$(grep -c ^processor /proc/cpuinfo)
 
 export ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
 export PATH=$PREFIX/bin:$PATH
-export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:$PKG_CONFIG_PATH
+export PKG_CONFIG_PATH=$PREFIX/lib64/pkgconfig:$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig:$PKG_CONFIG_PATH
 export LIBRARY_PATH=$PREFIX/lib:$PREFIX/lib64
 export LD_LIBRARY_PATH=$LIBRARY_PATH
-export C_INCLUDE_PATH=$PREFIX/include:$INCLUDEPATH:$C_INCLUDE_PATH
+export C_INCLUDE_PATH=$PREFIX/include:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH
 
 #base dependiencies
 module load CMake/3.4.1-GCC-4.9.2
 module load Autotools/20150215-GCC-4.9.3-2.25
 module load intel-tbb-oss/intel64/44_20160526oss
-module load cuda70/toolkit/7.0.28 
+#probably useless module load cuda70/toolkit/7.0.28 
 
 #install packages with standard configuration
 function install {
@@ -50,20 +50,29 @@ cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX
 make -j$NUM_OF_PROCESSORS
 make install
 
-#tiny xml
+#tinyxml
 cd $TEMP
 wget https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz/download -O tinyxml_2_6_2.tar.gz
 tar xvf tinyxml_2_6_2.tar.gz
 cd tinyxml
 patch < $SCRIPT_PATH/Makefile.patch
 patch < $SCRIPT_PATH/tinyxml.h.patch
-make -j$NUM_OF_PROCESSORS #CFLAGS="-DTIXML_USE_STL"
+make -j$NUM_OF_PROCESSORS
 cp tinyxml.h $PREFIX/include
 ar crf libtinyxml.a $(ls *.o | grep -v xmltest)
 cp libtinyxml.a $PREFIX/lib
 gcc -shared -o libtinyxml.so $(ls *.o | grep -v xmltest) 
 cp libtinyxml.so $PREFIX/lib
 
+#tinyxml2
+cd $TEMP
+wget https://github.com/leethomason/tinyxml2/archive/3.0.0.tar.gz -O tinyxml2-3.0.0.tar.gz
+tar xvf tinyxml2-3.0.0.tar.gz 
+cd tinyxml2-3.0.0
+mkdir build && cd build
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
+make -j$NUM_OF_PROCESSORS 
+make install
 
 #SD format
 cd $TEMP
@@ -71,7 +80,7 @@ wget https://bitbucket.org/osrf/sdformat/get/sdformat4_4.1.1.tar.bz2
 tar xvf sdformat4_4.1.1.tar.bz2
 cd osrf-sdformat-10551a6e8a2c && mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
-make -j$NUM_OF_PROCESSORS #CFLAGS="-DTIXML_USE_STL"
+make -j$NUM_OF_PROCESSORS
 make install
 
 #protobuf
@@ -97,6 +106,10 @@ cp Dist/FreeImage.h $PREFIX/include
 
 #libcurl
 export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
+export C_INCLUDE_PATH=/cm/local/apps/curl/include/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=/cm/local/apps/curl/include/:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=/cm/local/apps/curl/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=/cm/local/apps/curl/lib:$LD_LIBRARY_PATH
 
 ##libtar
 cd $TEMP
@@ -266,8 +279,8 @@ tar xvf gazebo7_7.3.1.tar.bz2
 cd osrf-gazebo-9bc8cb494795
 [[ -d build ]] && rm -rf build
 mkdir -p build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DENABLE_TESTS_COMPILATION:BOOL=False .. 2>&1 | tee output-cmake
 #cmake -DOPENGL_INCLUDE_DIR=$OPENGL_INCLUDE_DIR -DCMAKE_INSTALL_PREFIX=$PREFIX ..
-make -j$NUM_OF_PROCESSORS
+make -j$NUM_OF_PROCESSORS 
 make install
 
