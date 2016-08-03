@@ -124,6 +124,17 @@ install https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
 install https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
 install https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
 install https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
+install https://www.x.org/archive/individual/proto/fontsproto-2.1.3.tar.gz
+install https://www.x.org/archive/individual/proto/scrnsaverproto-1.2.2.tar.gz
+install https://www.x.org/archive/individual/proto/renderproto-0.11.tar.gz
+install https://www.x.org/archive/individual/proto/xineramaproto-1.2.tar.gz
+install https://www.x.org/archive/individual/proto/randrproto-1.5.0.tar.gz
+install https://www.x.org/archive/individual/proto/resourceproto-1.2.0.tar.gz
+install https://www.x.org/archive/individual/proto/recordproto-1.14.2.tar.gz
+install https://www.x.org/archive/individual/proto/videoproto-2.3.3.tar.gz
+install https://www.x.org/archive/individual/proto/xf86dgaproto-2.1.tar.gz
+install https://www.x.org/archive/individual/proto/xf86driproto-2.1.1.tar.gz
+install https://www.x.org/archive/individual/proto/dmxproto-2.3.tar.gz
 
 install https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
 install https://www.x.org/archive/individual/lib/libX11-1.5.0.tar.gz
@@ -210,9 +221,9 @@ cd $TEMP
 wget https://github.com/google/protobuf/archive/v3.0.0-beta-4.tar.gz
 tar xvf v3.0.0-beta-4.tar.gz
 cd protobuf-3.0.0-beta-4
-./autogen.sh
-./configure --prefix=$PREFIX
-make -j$NUM_OF_PROCESSORS 
+./autogen.sh 2>&1 | tee output-autogen
+./configure --prefix=$PREFIX 2>&1 | tee output-configure
+make -j$NUM_OF_PROCESSORS  2>&1 | tee output-make
 make install
 
 install ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
