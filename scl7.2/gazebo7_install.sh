@@ -188,9 +188,9 @@ install https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
 #ogre
 mkdir -p $PREFIX/include/GL && ln -s /cm/shared/apps/easybuild.org-2.6/software/CUDA/7.5.18/extras/CUPTI/include/GL/glu.h $PREFIX/include/GL/glu.h #TODO: get rid of this hack
 cd $TEMP
-wget https://bitbucket.org/sinbad/ogre/get/v1-9-0.tar.bz2 -O ogre-v1-9-0.tar.bz2
-tar xvf ogre-v1-9-0.tar.bz2 
-cd sinbad-ogre-dd30349ea667
+wget wget https://bitbucket.org/sinbad/ogre/get/v1-8-1.tar.gz
+tar xvf v1-8-1.tar.gz
+cd sinbad-ogre-525a7f3bcd4e
 [[ -d build ]] && rm -rf build
 mkdir build && cd build
 cmake .. \
