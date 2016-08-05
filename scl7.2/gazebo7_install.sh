@@ -26,8 +26,6 @@ function install {
 export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
 export C_INCLUDE_PATH=/cm/local/apps/curl/include/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=/cm/local/apps/curl/include/:$CPLUS_INCLUDE_PATH
-export LIBRARY_PATH=/cm/local/apps/curl/lib:$LIBRARY_PATH
-export LD_LIBRARY_PATH=/cm/local/apps/curl/lib:$LD_LIBRARY_PATH
 
 #tinyxml
 cd $TEMP
