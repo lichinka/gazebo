@@ -181,8 +181,6 @@ install https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
 #install https://sourceforge.net/projects/libjpeg-turbo/files/1.5.0/libjpeg-turbo-1.5.0.tar.gz
 #install ftp://ftp.remotesensing.org/pub/libtiff/tiff-4.0.6.tar.gz
 
-#install http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
-
 #ogre
 mkdir -p $PREFIX/include/GL && ln -s /cm/shared/apps/easybuild.org-2.6/software/CUDA/7.5.18/extras/CUPTI/include/GL/glu.h $PREFIX/include/GL/glu.h #TODO: get rid of this hack
 mkdir -p $PREFIX/include/freetype2/freetype && cp -r $PREFIX/include/freetype2/* $PREFIX/include/freetype2/freetype #hack (ogre's cmake searches in freetype2/freetype dir)
@@ -205,6 +203,9 @@ make install
 #install https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-0.10.36.tar.gz
 #install https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-0.10.36.tar.gz
 #install ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.0.29.tar.bz2
+
+install https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
+install http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
 
 #qt
 cd $TEMP
