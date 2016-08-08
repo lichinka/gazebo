@@ -15,6 +15,12 @@ export LD_LIBRARY_PATH=$LIBRARY_PATH
 export C_INCLUDE_PATH=$PREFIX/include:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH
 
-module load CMake/3.4.1-GCC-4.9.2
-module load Autotools/20150215-GCC-4.9.3-2.25
-module load intel-tbb-oss/intel64/44_20160526oss
+if [ -z "$( cmake --version )" ]; then
+	module load CMake/3.4.1-GCC-4.9.2
+fi
+if [ -z "$( automake --version )" ]; then
+	module load Autotools/20150215-GCC-4.9.3-2.25
+fi
+if [ -z "$( ls /usr/include/tbb/tbb.h )" ]; then
+	module load intel-tbb-oss/intel64/44_20160526oss
+fi
