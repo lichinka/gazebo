@@ -1,0 +1,13 @@
+--- tinyxml.h	2011-05-15 04:24:57.000000000 +0200
++++ tinyxml_new.h	2016-07-25 16:40:34.333758007 +0200
+@@ -43,6 +43,10 @@
+ #define DEBUG
+ #endif
+ 
++#ifndef TIXML_USE_STL
++        #define TIXML_USE_STL
++#endif
++
+ #ifdef TIXML_USE_STL
+ 	#include <string>
+  	#include <iostream>
