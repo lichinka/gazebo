@@ -3,7 +3,8 @@ PREFIX=$HOME/local
 SYSCONFDIR=$PREFIX/etc
 TEMP=$HOME/tmp
 
-NUM_OF_PROCESSORS=$(grep -c ^processor /proc/cpuinfo) - 2
+NUM_OF_PROCESSORS=$(grep -c ^processor /proc/cpuinfo)
+NUM_OF_PROCESSORS=$((NUM_OF_PROCESSORS-2))
 NUM_OF_PROCESSORS=$((NUM_OF_PROCESSORS>1?NUM_OF_PROCESSORS:1))
 
 export ACLOCAL="aclocal -I ${PREFIX}/share/aclocal"
