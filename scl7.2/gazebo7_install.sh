@@ -102,10 +102,6 @@ cd freetype-2.6
 make -j$NUM_OF_PROCESSORS
 make install
 
-#install https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.0.tar.bz2
-##freetype (again, this time with harfbuzz)
-#install http://download.savannah.gnu.org/releases/freetype/freetype-2.6.tar.gz
-
 #fontconfig
 cd $TEMP
 wget https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.0.tar.gz
@@ -169,20 +165,8 @@ install https://www.x.org/archive/individual/lib/libxshmfence-1.2.tar.gz
 install https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
 install https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
 
-#install https://xcb.freedesktop.org/dist/xcb-proto-1.12.tar.gz
-#install https://xcb.freedesktop.org/dist/libpthread-stubs-0.3.tar.gz
-#install https://xcb.freedesktop.org/dist/libxcb-1.12.tar.gz
-#install ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
-#install http://ftp.gnome.org/pub/GNOME/sources/glib/2.49/glib-2.49.4.tar.xz
-#install https://www.cairographics.org/releases/cairo-1.14.6.tar.xz
-#install http://ftp.gnome.org/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz
-
-#install http://www.nasm.us/pub/nasm/releasebuilds/2.12/nasm-2.12.tar.gz
-#install https://sourceforge.net/projects/libjpeg-turbo/files/1.5.0/libjpeg-turbo-1.5.0.tar.gz
-#install ftp://ftp.remotesensing.org/pub/libtiff/tiff-4.0.6.tar.gz
-
 #ogre
-mkdir -p $PREFIX/include/GL && ln -s /cm/shared/apps/easybuild.org-2.6/software/CUDA/7.5.18/extras/CUPTI/include/GL/glu.h $PREFIX/include/GL/glu.h #TODO: get rid of this hack
+mkdir -p $PREFIX/include/GL && ln -s /cm/shared/apps/easybuild.org-2.6/software/CUDA/7.5.18/extras/CUPTI/include/GL/glu.h $PREFIX/include/GL/glu.h #hack (no other glu.h available)
 mkdir -p $PREFIX/include/freetype2/freetype && cp -r $PREFIX/include/freetype2/* $PREFIX/include/freetype2/freetype #hack (ogre's cmake searches in freetype2/freetype dir)
 cd $TEMP
 wget wget https://bitbucket.org/sinbad/ogre/get/v1-8-1.tar.gz
@@ -199,10 +183,6 @@ cmake .. \
     2>&1 | tee output-cmake
 make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
 make install
-
-#install https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-0.10.36.tar.gz
-#install https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-0.10.36.tar.gz
-#install ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.0.29.tar.bz2
 
 install https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
 install http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
