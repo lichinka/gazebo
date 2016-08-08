@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_PATH/load-environment
 mkdir -p $PREFIX
@@ -74,7 +76,7 @@ cd $TEMP
 wget https://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.17.0/FreeImage3170.zip
 unzip FreeImage3170.zip 
 cd FreeImage
-make -j$NUM_OF_PROCESSORS
+CXX='g++ -Wno-narrowing' make -j$NUM_OF_PROCESSORS
 cp Dist/lib* $PREFIX/lib 
 cp Dist/FreeImage.h $PREFIX/include
 
