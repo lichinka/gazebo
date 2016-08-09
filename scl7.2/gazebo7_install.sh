@@ -15,27 +15,39 @@ function install {
    archive=$(basename "$1")
    folder=$(basename -s .gz "$archive" | xargs basename -s .bz2 | xargs basename -s .xz | xargs basename -s .tar)
    cd $TEMP
-   [[ -d $folder ]] && rm -rf $folder
-   wget $url
-   tar xvf $archive
-   cd $folder
-   ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
+   if [ ! -d "${folder}" ]; then
+      wget $url
+      tar xvf $archive
+      cd $folder
+      ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
+   else
+      cd ${folder}
+   fi
    make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
    make install 2>&1 | tee output-make-install
 }
 
 #libcurl
-export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
-export C_INCLUDE_PATH=/cm/local/apps/curl/include/:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=/cm/local/apps/curl/include/:$CPLUS_INCLUDE_PATH
+exits="$( pkg-config --exists libcurl && echo yes )"
+if [ ${exits} = "yes" ]; then
+   echo "### LibCurl found"
+else
+   export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
+   export C_INCLUDE_PATH=/cm/local/apps/curl/include/:$C_INCLUDE_PATH
+   export CPLUS_INCLUDE_PATH=/cm/local/apps/curl/include/:$CPLUS_INCLUDE_PATH
+fi
 
 #tinyxml
 cd $TEMP
-wget https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz/download -O tinyxml_2_6_2.tar.gz
-tar xvf tinyxml_2_6_2.tar.gz
-cd tinyxml
-patch < $SCRIPT_PATH/patches/tinyxml/Makefile.patch
-patch < $SCRIPT_PATH/patches/tinyxml/tinyxml.h.patch
+if [ ! -d "tinyxml" ]; then
+   wget https://sourceforge.net/projects/tinyxml/files/tinyxml/2.6.2/tinyxml_2_6_2.tar.gz/download -O tinyxml_2_6_2.tar.gz
+   tar xvf tinyxml_2_6_2.tar.gz
+   cd tinyxml
+   patch < $SCRIPT_PATH/patches/tinyxml/Makefile.patch
+   patch < $SCRIPT_PATH/patches/tinyxml/tinyxml.h.patch
+else
+   cd tinyxml
+fi
 make -j$NUM_OF_PROCESSORS
 cp tinyxml.h $PREFIX/include
 ar crf libtinyxml.a $(ls *.o | grep -v xmltest)
@@ -45,18 +57,22 @@ cp libtinyxml.so $PREFIX/lib
 
 #tinyxml2
 cd $TEMP
-wget https://github.com/leethomason/tinyxml2/archive/3.0.0.tar.gz -O tinyxml2-3.0.0.tar.gz
-tar xvf tinyxml2-3.0.0.tar.gz 
+if [ ! -d "tinyxml2-3.0.0" ]; then
+   wget https://github.com/leethomason/tinyxml2/archive/3.0.0.tar.gz -O tinyxml2-3.0.0.tar.gz
+   tar xvf tinyxml2-3.0.0.tar.gz
+fi
 cd tinyxml2-3.0.0
-mkdir build && cd build
+mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
 make -j$NUM_OF_PROCESSORS 
 make install
 
 #ignition math
 cd $TEMP
-wget https://bitbucket.org/ignitionrobotics/ign-math/get/ignition-math2_2.5.0.tar.bz2
-tar xvf ignition-math2_2.5.0.tar.bz2
+if [ ! -d "ignitionrobotics-ign-math-6c0e329b4808" ]; then
+   wget https://bitbucket.org/ignitionrobotics/ign-math/get/ignition-math2_2.5.0.tar.bz2
+   tar xvf ignition-math2_2.5.0.tar.bz2
+fi
 cd ignitionrobotics-ign-math-6c0e329b4808 && mkdir -p build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=$PREFIX
 make -j$NUM_OF_PROCESSORS
@@ -64,8 +80,10 @@ make install
 
 #SD format
 cd $TEMP
-wget https://bitbucket.org/osrf/sdformat/get/sdformat4_4.1.1.tar.bz2
-tar xvf sdformat4_4.1.1.tar.bz2
+if [ ! -d "osrf-sdformat-10551a6e8a2c" ]; then
+   wget https://bitbucket.org/osrf/sdformat/get/sdformat4_4.1.1.tar.bz2
+   tar xvf sdformat4_4.1.1.tar.bz2
+fi
 cd osrf-sdformat-10551a6e8a2c && mkdir -p build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
 make -j$NUM_OF_PROCESSORS
@@ -73,8 +91,13 @@ make install
 
 #freeimage
 cd $TEMP
-wget https://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.17.0/FreeImage3170.zip
-unzip FreeImage3170.zip 
+if [ ! -d "FreeImage" ]; then
+   wget https://sourceforge.net/projects/freeimage/files/Source%20Distribution/3.17.0/FreeImage3170.zip
+   unzip FreeImage3170.zip
+   cd FreeImage
+   patch -p1 < ${SCRIPT_PATH}/patches/freeimage/dsp.patch
+   cd ..
+fi
 cd FreeImage
 CXX='g++ -Wno-narrowing' make -j$NUM_OF_PROCESSORS
 cp Dist/lib* $PREFIX/lib 
@@ -82,8 +105,10 @@ cp Dist/FreeImage.h $PREFIX/include
 
 ##libtar
 cd $TEMP
-wget --no-check-certificate https://repo.or.cz/libtar.git/snapshot/0907a9034eaf2a57e8e4a9439f793f3f05d446cd.tar.gz -O libtar-1.2.2.tar.gz
-tar xvf libtar-1.2.2.tar.gz
+if [ ! -d "libtar-0907a90" ]; then
+   wget --no-check-certificate https://repo.or.cz/libtar.git/snapshot/0907a9034eaf2a57e8e4a9439f793f3f05d446cd.tar.gz -O libtar-1.2.2.tar.gz
+   tar xvf libtar-1.2.2.tar.gz
+fi
 cd libtar-0907a90
 autoreconf --force --install
 ./configure --prefix=$PREFIX \
@@ -93,6 +118,7 @@ autoreconf --force --install
 make -j$NUM_OF_PROCESSORS
 make install
 
+##libpng
 install http://downloads.sourceforge.net/libpng/libpng-1.6.23.tar.xz
 
 #freetype (without harfbuz)
