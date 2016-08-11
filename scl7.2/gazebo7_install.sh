@@ -145,7 +145,7 @@ make -j$NUM_OF_PROCESSORS
 make install
 
 #xorg
-rm "$PREFIX/include/GL/glu.h"
+[[ -f "$PREFIX/include/GL/glu.h" ]] && rm "$PREFIX/include/GL/glu.h"
 
 install https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
 
