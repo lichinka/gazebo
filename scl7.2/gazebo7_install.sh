@@ -11,8 +11,8 @@ mkdir -p $PREFIX/include
 mkdir -p $PREFIX/lib
 
 #libcurl
-zero_if_exists="$( pkg-config --exists libcurl || echo doesntexist )"
-if [ -z "$zero_if_exists" ]; then
+empty_if_exists="$( pkg-config --exists libcurl || echo doesntexist )"
+if [ -z "$empty_if_exists" ]; then
    echo "### LibCurl found"
 else
    export PKG_CONFIG_PATH=/cm/local/apps/curl/lib/pkgconfig:$PKG_CONFIG_PATH
