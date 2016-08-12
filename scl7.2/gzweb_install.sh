@@ -4,24 +4,7 @@ set -e
 
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_PATH/load-environment
-
-#automatically install packages with configure.sh
-function install {
-   url=$1
-   archive=$(basename "$1")
-   folder=$(basename -s .gz "$archive" | xargs basename -s .bz2 | xargs basename -s .xz | xargs basename -s .tar)
-   cd $TEMP
-   if [ ! -d "${folder}" ]; then
-      wget $url
-      tar xvf $archive
-      cd $folder
-      ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
-   else
-      cd ${folder}
-   fi
-   make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
-   make install 2>&1 | tee output-make-install
-}
+source $SCRIPT_PATH/install_with_configure_script
 
 #nodejs
 wget https://nodejs.org/dist/v0.10.46/node-v0.10.46.tar.gz
@@ -31,7 +14,7 @@ cd node-v0.10.46
 make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
 make install 2>&1 | tee output-make-install
 
-install http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
+install_with_configure_script http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
 
 #mercurial
 cd $TEMP

@@ -1,0 +1,19 @@
+
+#automatically install packages with configure.sh
+function install_with_configure_script {
+   url=$1
+   archive=$(basename "$1")
+   folder=$(basename -s .gz "$archive" | xargs basename -s .bz2 | xargs basename -s .xz | xargs basename -s .tar)
+   cd $TEMP
+   if [ ! -d "${folder}" ]; then
+      wget $url
+      tar xvf $archive
+      cd $folder
+      ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
+   else
+      cd ${folder}
+   fi
+   make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
+   make install 2>&1 | tee output-make-install
+}
+

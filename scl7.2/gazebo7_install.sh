@@ -4,28 +4,11 @@ set -e
 
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_PATH/load-environment
+source $SCRIPT_PATH/install_with_configure_script
 mkdir -p $PREFIX
 mkdir -p $TEMP
 mkdir -p $PREFIX/include
 mkdir -p $PREFIX/lib
-
-#automatically install packages with configure.sh
-function install {
-   url=$1
-   archive=$(basename "$1")
-   folder=$(basename -s .gz "$archive" | xargs basename -s .bz2 | xargs basename -s .xz | xargs basename -s .tar)
-   cd $TEMP
-   if [ ! -d "${folder}" ]; then
-      wget $url
-      tar xvf $archive
-      cd $folder
-      ./configure --prefix=$PREFIX --sysconfdir=$SYSCONFDIR 2>&1 | tee output-configure
-   else
-      cd ${folder}
-   fi
-   make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
-   make install 2>&1 | tee output-make-install
-}
 
 #libcurl
 exits="$( pkg-config --exists libcurl && echo yes )"
@@ -119,7 +102,7 @@ make -j$NUM_OF_PROCESSORS
 make install
 
 ##libpng
-install http://downloads.sourceforge.net/libpng/libpng-1.6.23.tar.xz
+install_with_configure_script http://downloads.sourceforge.net/libpng/libpng-1.6.23.tar.xz
 
 #freetype (without harfbuz)
 rm -rf "$PREFIX/include/freetype2/freetype"
@@ -147,58 +130,58 @@ make install
 #xorg
 [[ -f "$PREFIX/include/GL/glu.h" ]] && rm "$PREFIX/include/GL/glu.h"
 
-install https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/util/util-macros-1.19.0.tar.gz
 
-install https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
-install https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
-install https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
-install https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
-install https://www.x.org/archive/individual/proto/fontsproto-2.1.3.tar.gz
-install https://www.x.org/archive/individual/proto/scrnsaverproto-1.2.2.tar.gz
-install https://www.x.org/archive/individual/proto/renderproto-0.11.tar.gz
-install https://www.x.org/archive/individual/proto/xineramaproto-1.2.tar.gz
-install https://www.x.org/archive/individual/proto/randrproto-1.5.0.tar.gz
-install https://www.x.org/archive/individual/proto/resourceproto-1.2.0.tar.gz
-install https://www.x.org/archive/individual/proto/recordproto-1.14.2.tar.gz
-install https://www.x.org/archive/individual/proto/videoproto-2.3.3.tar.gz
-install https://www.x.org/archive/individual/proto/xf86dgaproto-2.1.tar.gz
-install https://www.x.org/archive/individual/proto/xf86driproto-2.1.1.tar.gz
-install https://www.x.org/archive/individual/proto/dmxproto-2.3.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/proto/xproto-7.0.29.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/proto/xextproto-7.3.0.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/proto/inputproto-2.3.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/proto/kbproto-1.0.7.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/fontsproto-2.1.3.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/scrnsaverproto-1.2.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/renderproto-0.11.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/xineramaproto-1.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/randrproto-1.5.0.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/resourceproto-1.2.0.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/recordproto-1.14.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/videoproto-2.3.3.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/xf86dgaproto-2.1.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/xf86driproto-2.1.1.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/proto/dmxproto-2.3.tar.gz
 
-install https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
-install https://www.x.org/archive/individual/lib/libX11-1.5.0.tar.gz
-install https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
-install https://www.x.org/archive/individual/lib/libFS-1.0.7.tar.gz
-install https://www.x.org/archive/individual/lib/libICE-1.0.9.tar.gz
-install https://www.x.org/archive/individual/lib/libSM-1.2.2.tar.gz
-install https://www.x.org/archive/individual/lib/libXScrnSaver-1.2.2.tar.gz
-install https://www.x.org/releases/individual/lib/libXt-1.1.5.tar.gz
-install https://www.x.org/archive/individual/lib/libXmu-1.1.2.tar.gz
-install https://www.x.org/archive/individual/lib/libXpm-3.5.11.tar.gz
-install https://www.x.org/releases/individual/lib/libXaw-1.0.13.tar.gz
-install https://www.x.org/archive/individual/lib/libXfixes-5.0.tar.gz
-install https://www.x.org/archive/individual/lib/libXcomposite-0.4.4.tar.gz
-install https://www.x.org/archive/individual/lib/libXrender-0.9.8.tar.gz
-install https://www.x.org/archive/individual/lib/libXcursor-1.1.14.tar.gz
-install https://www.x.org/archive/individual/lib/libXdamage-1.1.tar.gz 
-install https://www.x.org/archive/individual/lib/libfontenc-1.1.3.tar.gz
-install https://www.x.org/archive/individual/lib/libXfont2-2.0.1.tar.gz
-install https://www.x.org/archive/individual/lib/libXft-2.3.2.tar.gz
-install https://www.x.org/releases/individual/lib/libXi-1.7.tar.gz
-install https://www.x.org/archive/individual/lib/libXinerama-1.1.tar.gz
-install https://www.x.org/archive/individual/lib/libXrandr-1.4.2.tar.gz
-install https://www.x.org/archive/individual/lib/libXres-1.0.7.tar.gz
-install https://www.x.org/archive/individual/lib/libXtst-1.2.2.tar.gz
-install https://www.x.org/archive/individual/lib/libXv-1.0.9.tar.gz
-install https://www.x.org/archive/individual/lib/libXvMC-1.0.8.tar.gz
-install https://www.x.org/archive/individual/lib/libXxf86dga-1.1.tar.gz
-install https://www.x.org/archive/individual/lib/libXxf86vm-1.1.3.tar.gz
-install https://www.x.org/archive/individual/lib/libdmx-1.1.3.tar.gz 
-install https://www.x.org/archive/individual/lib/libpciaccess-0.13.tar.gz
-install https://www.x.org/archive/individual/lib/libxkbfile-1.0.9.tar.gz
-install https://www.x.org/archive/individual/lib/libxshmfence-1.2.tar.gz
-install https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
-install https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/xtrans-1.3.5.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libX11-1.5.0.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/libXext-1.2.0.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libFS-1.0.7.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libICE-1.0.9.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libSM-1.2.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXScrnSaver-1.2.2.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/libXt-1.1.5.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXmu-1.1.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXpm-3.5.11.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/libXaw-1.0.13.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXfixes-5.0.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXcomposite-0.4.4.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXrender-0.9.8.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXcursor-1.1.14.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXdamage-1.1.tar.gz 
+install_with_configure_script https://www.x.org/archive/individual/lib/libfontenc-1.1.3.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXfont2-2.0.1.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXft-2.3.2.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/libXi-1.7.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXinerama-1.1.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXrandr-1.4.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXres-1.0.7.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXtst-1.2.2.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXv-1.0.9.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXvMC-1.0.8.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXxf86dga-1.1.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libXxf86vm-1.1.3.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libdmx-1.1.3.tar.gz 
+install_with_configure_script https://www.x.org/archive/individual/lib/libpciaccess-0.13.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libxkbfile-1.0.9.tar.gz
+install_with_configure_script https://www.x.org/archive/individual/lib/libxshmfence-1.2.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/pixman-0.34.0.tar.gz
+install_with_configure_script https://www.x.org/releases/individual/lib/libXau-1.0.8.tar.gz
 
 ##ogre3d
 mkdir -p $PREFIX/include/GL
@@ -227,10 +210,10 @@ make -j$NUM_OF_PROCESSORS 2>&1 | tee output-make
 make install
 
 ##expat
-install https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
+install_with_configure_script https://sourceforge.net/projects/expat/files/expat/2.2.0/expat-2.2.0.tar.bz2
 
 ##dbus
-install http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
+install_with_configure_script http://dbus.freedesktop.org/releases/dbus/dbus-1.10.6.tar.gz
 
 ##qt
 cd $TEMP
@@ -256,13 +239,13 @@ make -j$NUM_OF_PROCESSORS  2>&1 | tee output-make
 make install 2>&1 | tee output-makeinstall
 
 ##libffi
-install ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
+install_with_configure_script ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
 
 ##glib
-install http://ftp.gnome.org/pub/gnome/sources/glib/2.48/glib-2.48.1.tar.xz
+install_with_configure_script http://ftp.gnome.org/pub/gnome/sources/glib/2.48/glib-2.48.1.tar.xz
 
 ##gts
-install https://sourceforge.net/projects/gts/files/gts/0.7.6/gts-0.7.6.tar.gz
+install_with_configure_script https://sourceforge.net/projects/gts/files/gts/0.7.6/gts-0.7.6.tar.gz
 
 ##gazebo
 cd $TEMP
